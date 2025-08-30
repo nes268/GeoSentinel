@@ -1,5 +1,5 @@
-import React from 'react';
-import { AlertTriangle, TrendingUp, Zap, Droplets, Thermometer, Wind, Shield, Activity } from 'lucide-react';
+
+import { AlertTriangle, TrendingUp, Droplets, Thermometer, Wind, Shield, Activity } from 'lucide-react';
 
 interface RiskGaugeProps {
   value: number;
@@ -48,40 +48,7 @@ function RiskGauge({ value, label, color }: RiskGaugeProps) {
   );
 }
 
-interface MetricCardProps {
-  icon: React.ComponentType<any>;
-  title: string;
-  value: string;
-  change: string;
-  trend: 'up' | 'down' | 'stable';
-  color: string;
-}
 
-function MetricCard({ icon: Icon, title, value, change, trend, color }: MetricCardProps) {
-  const trendColors = {
-    up: 'text-red-400',
-    down: 'text-green-400',
-    stable: 'text-gray-400'
-  };
-
-  return (
-    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-cyan-500/30 transition-all duration-300 group">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-lg ${color} group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="w-6 h-6 text-white" />
-        </div>
-        <div className={`flex items-center space-x-1 text-sm ${trendColors[trend]}`}>
-          <TrendingUp className={`w-4 h-4 ${trend === 'down' ? 'rotate-180' : trend === 'stable' ? 'rotate-90' : ''}`} />
-          <span>{change}</span>
-        </div>
-      </div>
-      <div>
-        <h3 className="text-gray-400 text-sm font-medium">{title}</h3>
-        <p className="text-2xl font-bold text-white mt-1">{value}</p>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard() {
 
