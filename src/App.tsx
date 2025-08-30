@@ -10,6 +10,7 @@ import Settings from './components/Settings';
 import Performance from './components/Performance';
 import Terrain3D from './components/Terrain3D';
 import Sustainability from './components/Sustainability';
+import QuarryViewer from './components/QuarryViewer';
 
 function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -25,6 +26,8 @@ function App() {
         return <AIPredictions />;
       case 'terrain':
         return <Terrain3D />;
+      case 'quarry':
+        return <QuarryViewer />;
       case 'alerts':
         return <Alerts />;
       case 'reports':
