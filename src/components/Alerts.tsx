@@ -12,7 +12,15 @@ interface Alert {
   status: 'active' | 'acknowledged' | 'resolved';
 }
 
+interface ActionPlan {
+  id: string;
+  title: string;
+  steps: string[];
+}
+
 function AlertItem({ alert, onStatusChange }: { alert: Alert; onStatusChange: (id: string, status: string) => void }) {
+  const [showActionPlan, setShowActionPlan] = useState(false);
+  
   const severityConfig = {
     critical: {
       label: '🔴 Critical',
@@ -36,6 +44,78 @@ function AlertItem({ alert, onStatusChange }: { alert: Alert; onStatusChange: (i
 
   const config = severityConfig[alert.severity];
 
+  const actionPlans: Record<string, ActionPlan> = {
+    '1': {
+      id: '1',
+      title: 'High Vibration Emergency Response',
+      steps: [
+        '1. Immediately evacuate all personnel from Zone A, Sector 3',
+        '2. Contact emergency response team',
+        '3. Shut down all equipment in affected area',
+        '4. Conduct structural integrity assessment',
+        '5. Monitor vibration levels continuously'
+      ]
+    },
+    '2': {
+      id: '2',
+      title: 'Rainfall Management Protocol',
+      steps: [
+        '1. Activate drainage systems',
+        '2. Monitor water levels in critical areas',
+        '3. Prepare sandbags if necessary',
+        '4. Alert maintenance team for potential flooding',
+        '5. Update weather monitoring frequency'
+      ]
+    },
+    '3': {
+      id: '3',
+      title: 'Gas Leak Response Protocol',
+      steps: [
+        '1. Evacuate affected area immediately',
+        '2. Shut off gas supply to Zone C',
+        '3. Ventilate the area',
+        '4. Contact hazmat team',
+        '5. Test air quality before re-entry'
+      ]
+    },
+    '4': {
+      id: '4',
+      title: 'Equipment Overheating Response',
+      steps: [
+        '1. Reduce equipment load immediately',
+        '2. Check cooling system functionality',
+        '3. Monitor temperature trends',
+        '4. Schedule maintenance inspection',
+        '5. Consider temporary shutdown if temperature continues rising'
+      ]
+    },
+    '5': {
+      id: '5',
+      title: 'Maintenance Schedule Protocol',
+      steps: [
+        '1. Confirm maintenance team availability',
+        '2. Prepare necessary tools and equipment',
+        '3. Review safety protocols',
+        '4. Schedule equipment downtime',
+        '5. Update maintenance log'
+      ]
+    }
+  };
+
+  const handleAcknowledge = () => {
+    onStatusChange(alert.id, 'acknowledged');
+  };
+
+  const handleDismiss = () => {
+    if (confirm(`Are you sure you want to dismiss this ${alert.severity} alert? This action cannot be undone.`)) {
+      onStatusChange(alert.id, 'resolved');
+    }
+  };
+
+  const handleActionPlan = () => {
+    setShowActionPlan(!showActionPlan);
+  };
+
   return (
     <div className={`bg-gray-800/50 backdrop-blur-sm border ${config.borderColor} rounded-xl p-6 transition-all duration-300 hover:border-cyan-500/30`}>
       <div className="flex items-start justify-between mb-4">
@@ -46,34 +126,76 @@ function AlertItem({ alert, onStatusChange }: { alert: Alert; onStatusChange: (i
             <span className="text-white font-medium">{alert.zone} – Sector {alert.sector}</span>
             <span className="text-gray-500">•</span>
             <span className="text-gray-400">{alert.timeAgo}</span>
+            {alert.status === 'acknowledged' && (
+              <>
+                <span className="text-gray-500">•</span>
+                <span className="text-green-400 flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Acknowledged
+                </span>
+              </>
+            )}
+            {alert.status === 'resolved' && (
+              <>
+                <span className="text-gray-500">•</span>
+                <span className="text-blue-400 flex items-center">
+                  <CheckCircle2 className="w-4 h-4 mr-1" />
+                  Resolved
+                </span>
+              </>
+            )}
           </div>
           
           <div className="mb-3">
             <p className="text-white text-lg mb-2">{alert.description}</p>
             <p className="text-gray-400 text-sm">{alert.sensorData}</p>
           </div>
+
+          {showActionPlan && actionPlans[alert.id] && (
+            <div className="mt-4 p-4 bg-gray-700/50 rounded-lg border border-gray-600">
+              <h4 className="text-cyan-400 font-semibold mb-3">{actionPlans[alert.id].title}</h4>
+              <ul className="space-y-2">
+                {actionPlans[alert.id].steps.map((step, index) => (
+                  <li key={index} className="text-gray-300 text-sm flex items-start">
+                    <span className="text-cyan-400 mr-2">▸</span>
+                    {step}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <button
-            onClick={() => onStatusChange(alert.id, 'acknowledged')}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm font-medium transition-all duration-300"
+          {alert.status === 'active' && (
+            <button
+              onClick={handleAcknowledge}
+              className="flex items-center space-x-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm font-medium transition-all duration-300"
+            >
+              <CheckCircle className="w-4 h-4" />
+              <span>Acknowledge</span>
+            </button>
+          )}
+          
+          <button 
+            onClick={handleActionPlan}
+            className={`flex items-center space-x-2 px-4 py-2 ${showActionPlan ? 'bg-cyan-500/30 text-cyan-300' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400'} rounded-lg text-sm font-medium transition-all duration-300`}
           >
-            <CheckCircle className="w-4 h-4" />
-            <span>Acknowledge</span>
-          </button>
-          
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg text-sm font-medium transition-all duration-300">
             <MessageSquare className="w-4 h-4" />
-            <span>Action Plan</span>
+            <span>{showActionPlan ? 'Hide Action Plan' : 'Action Plan'}</span>
           </button>
           
-          <button className="flex items-center space-x-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-all duration-300">
-            <XCircle className="w-4 h-4" />
-            <span>Dismiss</span>
-          </button>
+          {alert.status !== 'resolved' && (
+            <button 
+              onClick={handleDismiss}
+              className="flex items-center space-x-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-all duration-300"
+            >
+              <XCircle className="w-4 h-4" />
+              <span>Dismiss</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -143,19 +265,34 @@ export default function Alerts() {
   };
 
   const acknowledgeAll = () => {
-    setAlerts(alerts.map(alert => ({ ...alert, status: 'acknowledged' as Alert['status'] })));
+    const activeAlerts = alerts.filter(alert => alert.status === 'active');
+    
+    if (activeAlerts.length === 0) {
+      alert('No active alerts to acknowledge.');
+      return;
+    }
+
+    if (confirm(`Are you sure you want to acknowledge all ${activeAlerts.length} active alerts?`)) {
+      setAlerts(alerts.map(alert => 
+        alert.status === 'active' ? { ...alert, status: 'acknowledged' as Alert['status'] } : alert
+      ));
+    }
   };
 
   const alertCounts = {
     active: alerts.filter(a => a.status === 'active').length,
     acknowledged: alerts.filter(a => a.status === 'acknowledged').length,
-    resolvedToday: 5 // Hardcoded as per user specification
+    resolvedToday: alerts.filter(a => a.status === 'resolved').length + 5 // Including previously resolved
   };
 
   const filteredAlerts = alerts.filter(alert => {
     if (selectedSeverity === 'all') return true;
     return alert.severity === selectedSeverity;
   });
+
+  const handleSeverityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSeverity(e.target.value);
+  };
 
   return (
     <div className="space-y-6">
@@ -165,32 +302,45 @@ export default function Alerts() {
         <p className="text-gray-400">Real-time safety alerts and incident management</p>
       </div>
 
-
-
       {/* Control Buttons */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
           <div className="relative">
             <select
               value={selectedSeverity}
-              onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="bg-gray-700 border border-gray-600 text-white px-4 py-2 pr-10 rounded-lg focus:border-cyan-500 transition-colors duration-300 appearance-none"
+              onChange={handleSeverityChange}
+              className="bg-gray-700 border border-gray-600 text-white px-4 py-2 pr-10 rounded-lg focus:border-cyan-500 transition-colors duration-300 appearance-none cursor-pointer"
             >
-              <option value="all">All Severities</option>
-              <option value="critical">Critical</option>
-              <option value="warning">Warning</option>
-              <option value="info">Info</option>
+              <option value="all">All Severities ({alerts.length})</option>
+              <option value="critical">Critical ({alerts.filter(a => a.severity === 'critical').length})</option>
+              <option value="warning">Warning ({alerts.filter(a => a.severity === 'warning').length})</option>
+              <option value="info">Info ({alerts.filter(a => a.severity === 'info').length})</option>
             </select>
             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
+          <div className="text-sm text-gray-400">
+            Showing {filteredAlerts.length} of {alerts.length} alerts
+          </div>
         </div>
         
-        <button
-          onClick={acknowledgeAll}
-          className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-300"
-        >
-          Acknowledge All
-        </button>
+        <div className="flex items-center space-x-4">
+          <div className="text-sm text-gray-400">
+            Active: <span className="text-red-400 font-medium">{alertCounts.active}</span> | 
+            Acknowledged: <span className="text-green-400 font-medium">{alertCounts.acknowledged}</span> | 
+            Resolved Today: <span className="text-blue-400 font-medium">{alertCounts.resolvedToday}</span>
+          </div>
+          <button
+            onClick={acknowledgeAll}
+            disabled={alertCounts.active === 0}
+            className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
+              alertCounts.active === 0 
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+                : 'bg-red-500 hover:bg-red-600 text-white'
+            }`}
+          >
+            Acknowledge All ({alertCounts.active})
+          </button>
+        </div>
       </div>
 
       {/* Alert List */}
@@ -201,6 +351,14 @@ export default function Alerts() {
           <div className="text-center py-12 text-gray-400">
             <AlertTriangle className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p>No alerts match your current filters</p>
+            {selectedSeverity !== 'all' && (
+              <button 
+                onClick={() => setSelectedSeverity('all')}
+                className="mt-4 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 rounded-lg text-sm transition-all duration-300"
+              >
+                Show All Alerts
+              </button>
+            )}
           </div>
         ) : (
           filteredAlerts.map((alert) => (
