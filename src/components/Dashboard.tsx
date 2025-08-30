@@ -187,42 +187,17 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="relative h-96 bg-gray-900/50 rounded-lg flex items-center justify-center border border-cyan-500/20 p-6">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
-                  <Shield className="w-12 h-12 text-white" />
-                </div>
-                <p className="text-gray-400 text-xl mb-3 font-medium">Interactive 3D Model Loading...</p>
-                <p className="text-gray-500 mb-4">Drag to rotate • Scroll to zoom</p>
-                
-                {/* Additional content to fill space */}
-                <div className="grid grid-cols-3 gap-4 mt-6 max-w-md mx-auto">
-                  <div className="text-center">
-                    <div className="w-8 h-8 bg-green-500/20 border border-green-500/30 rounded-lg flex items-center justify-center mx-auto mb-2">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    </div>
-                    <p className="text-xs text-gray-400">Safe Zones</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-8 h-8 bg-yellow-500/20 border border-yellow-500/30 rounded-lg flex items-center justify-center mx-auto mb-2">
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    </div>
-                    <p className="text-xs text-gray-400">Warning</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-8 h-8 bg-red-500/20 border border-red-500/30 rounded-lg flex items-center justify-center mx-auto mb-2">
-                      <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                    </div>
-                    <p className="text-xs text-gray-400">Danger</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Simulated danger zones - better positioned */}
-              <div className="absolute top-8 left-8 w-12 h-12 bg-red-500/30 border-2 border-red-500 rounded-full animate-ping"></div>
-              <div className="absolute bottom-8 right-8 w-10 h-10 bg-yellow-500/30 border-2 border-yellow-500 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-green-500/30 border-2 border-green-500 rounded-full"></div>
-              <div className="absolute top-1/4 right-1/4 w-6 h-6 bg-blue-500/30 border-2 border-blue-500 rounded-full animate-pulse"></div>
+            <div className="relative h-96 bg-gray-900/50 rounded-lg border border-cyan-500/20 p-4">
+              <iframe
+                title="quarry_scan_from_drones_dashboard"
+                className="w-full h-full rounded"
+                allow="autoplay; fullscreen; web-share; xr-spatial-tracking; camera; gyroscope; accelerometer; magnetometer; clipboard-write"
+                referrerPolicy="no-referrer-when-downgrade"
+                loading="lazy"
+                frameBorder={0}
+                allowFullScreen
+                src="https://sketchfab.com/models/4b216d9165af4ca1bd655993da499ab8/embed?autostart=1&ui_infos=1&ui_controls=1&ui_help=0&ui_watermark=0"
+              />
             </div>
           </div>
         </div>
