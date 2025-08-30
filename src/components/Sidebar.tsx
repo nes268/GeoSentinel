@@ -43,7 +43,7 @@ export default function Sidebar({ activeModule, onModuleChange, isCollapsed }: S
           </div>
           {!isCollapsed && (
             <div>
-              <h1 className="text-2xl font-bold text-white">GeoSilent</h1>
+              <h1 className="text-2xl font-bold text-white">GeoSentinel</h1>
             </div>
           )}
         </div>
