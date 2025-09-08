@@ -215,67 +215,50 @@ const Terrain3D: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2 text-green-400">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">Live Feed</span>
+              <span className="text-sm font-medium">Weekly timeline</span>
             </div>
           </div>
 
           {/* Drone Imagery Visualization */}
-          <div className="relative h-80 bg-gray-900/50 rounded-lg border border-cyan-500/20 p-4">
-            <svg className="w-full h-full" viewBox="0 0 400 300">
-              {/* Background Grid */}
-              {Array.from({ length: 8 }, (_, i) => (
-                <line
-                  key={`h-${i}`}
-                  x1="0"
-                  y1={i * 37.5}
-                  x2="400"
-                  y2={i * 37.5}
-                  stroke="#374151"
-                  strokeWidth="1"
-                  opacity="0.3"
-                />
-              ))}
-              {Array.from({ length: 10 }, (_, i) => (
-                <line
-                  key={`v-${i}`}
-                  x1={i * 40}
-                  y1="0"
-                  x2={i * 40}
-                  y2="300"
-                  stroke="#374151"
-                  strokeWidth="1"
-                  opacity="0.3"
-                />
-              ))}
+          <div className="relative h-80 bg-gray-900/50 rounded-lg border border-cyan-500/20 p-4 overflow-hidden">
+            <div className="relative w-full h-full rounded overflow-hidden">
+              <img 
+                src="./src/components/droneimage.jpg" 
+                alt="Drone imagery analysis" 
+                className="w-full h-full object-fill rounded"
+              />
 
-              {/* Terrain Points */}
-              {terrainPoints.map((point, index) => (
-                <g key={index}>
-                  {/* Glowing effect for unstable areas */}
-                  {point.type === 'unstable' && (
+              {/* Terrain Points Overlay */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300">
+                {/* Terrain Points */}
+                {terrainPoints.map((point, index) => (
+                  <g key={index}>
+                    {/* Glowing effect for unstable areas */}
+                    {point.type === 'unstable' && (
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={getPointSize(point.type) + 4}
+                        fill={getPointColor(point.type)}
+                        opacity="0.3"
+                        className="animate-ping"
+                      />
+                    )}
+                    
+                    {/* Main point */}
                     <circle
                       cx={point.x}
                       cy={point.y}
-                      r={getPointSize(point.type) + 4}
+                      r={getPointSize(point.type)}
                       fill={getPointColor(point.type)}
-                      opacity="0.3"
-                      className="animate-ping"
+                      className="cursor-pointer hover:r-2 transition-all duration-300"
+                      onMouseEnter={() => setHoveredPoint(point)}
+                      onMouseLeave={() => setHoveredPoint(null)}
                     />
-                  )}
-                  
-                  {/* Main point */}
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r={getPointSize(point.type)}
-                    fill={getPointColor(point.type)}
-                    className="cursor-pointer hover:r-2 transition-all duration-300"
-                    onMouseEnter={() => setHoveredPoint(point)}
-                    onMouseLeave={() => setHoveredPoint(null)}
-                  />
-                </g>
-              ))}
-            </svg>
+                  </g>
+                ))}
+              </svg>
+            </div>
 
             {/* Legend */}
             <div className="absolute bottom-4 left-4 bg-gray-800/80 backdrop-blur-sm rounded-lg p-3 border border-gray-600/50">
