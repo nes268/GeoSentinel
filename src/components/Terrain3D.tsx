@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import droneImage from "./droneimage.jpg";
 import { MapPin, AlertTriangle, TrendingUp, Mountain, Camera, Eye, Info, Activity, Gauge, Zap } from 'lucide-react';
 
 interface CrackData {
@@ -223,7 +224,7 @@ const Terrain3D: React.FC = () => {
           <div className="relative h-80 bg-gray-900/50 rounded-lg border border-cyan-500/20 p-4 overflow-hidden">
             <div className="relative w-full h-full rounded overflow-hidden">
               <img 
-                src="./src/components/droneimage.jpg" 
+                src={droneImage}
                 alt="Drone imagery analysis" 
                 className="w-full h-full object-fill rounded"
               />
