@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { AlertTriangle, TrendingUp, Clock, BarChart3, Activity, Shield, Target, Zap, ArrowLeft, MapPin, Eye, Droplet, Vibrate, RotateCcw, Bell, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { AlertTriangle, TrendingUp, Clock, BarChart3, Activity, Shield, Target, Zap, ArrowLeft, MapPin, Eye, Droplet, Vibrate, RotateCcw, Bell, Wifi, WifiOff } from 'lucide-react';
 import { TrendingDown } from 'lucide-react';
 
 interface ZoneData {
@@ -922,7 +922,6 @@ export default function GeoSentinelDashboard() {
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [isConnected, setIsConnected] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -939,13 +938,6 @@ export default function GeoSentinelDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-      setLastUpdated(new Date().toLocaleTimeString());
-    }, 1000);
-  };
 
   const selectedZoneData = selectedZone ? mockZones.find(z => z.zone_id === selectedZone) : null;
   
@@ -956,8 +948,7 @@ export default function GeoSentinelDashboard() {
 
   if (selectedZoneData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="container mx-auto px-6 py-8 space-y-8">
+      <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-4">
@@ -1084,49 +1075,15 @@ export default function GeoSentinelDashboard() {
             />
           </div>
         </div>
-      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="container mx-auto px-6 py-8">
+    <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/20">
-              <MapPin className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">GeoSentinel – AI Mine Safety</h1>
-              <p className="text-gray-400 text-lg">Advanced predictive monitoring system</p>
-            </div>
-          </div>
-          
-          <div className="text-right">
-            <div className="flex items-center space-x-3 mb-2">
-              <button
-                onClick={handleRefresh}
-                className="flex items-center space-x-2 px-3 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 transition-all duration-200"
-                disabled={refreshing}
-              >
-                <RefreshCw className={`w-4 h-4 text-cyan-400 ${refreshing ? 'animate-spin' : ''}`} />
-                <span className="text-sm text-cyan-400">Refresh</span>
-              </button>
-              
-              <div className="flex items-center space-x-2 text-cyan-400">
-                {isConnected ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4 text-red-400" />}
-                <span className="text-sm font-medium">Last Update: {lastUpdated}</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 ${isConnected ? 'bg-green-500' : 'bg-red-500'} rounded-full ${isConnected ? 'animate-pulse' : 'animate-bounce'}`}></div>
-              <span className="text-sm text-gray-400">
-                {isConnected ? 'Live Monitoring Active' : 'Connection Issues Detected'}
-              </span>
-            </div>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">AI Predictions</h1>
+          <p className="text-gray-400">Advanced predictive monitoring system</p>
         </div>
 
         {/* Zone Status Grid */}
@@ -1241,11 +1198,6 @@ export default function GeoSentinelDashboard() {
           </div>
         )}
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>GeoSentinel AI Mine Safety System | Real-time monitoring and predictive analytics</p>
-        </div>
-      </div>
     </div>
   );
 }
