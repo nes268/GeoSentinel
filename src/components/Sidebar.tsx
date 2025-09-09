@@ -23,6 +23,7 @@ const menuItems = [
   { id: 'sensors', icon: Radio, label: 'Sensor Data' },
   { id: 'ai', icon: Brain, label: 'AI Predictions' },
   { id: 'terrain', icon: Mountain, label: '3D Terrain' },
+  { id: 'quarry', icon: FileText, label: '3D Quarry Viewer' },
   { id: 'alerts', icon: AlertTriangle, label: 'Alerts' },
   { id: 'gamification', icon: Gamepad2, label: 'Performance' },
   { id: 'sustainability', icon: Leaf, label: 'Sustainability' },
