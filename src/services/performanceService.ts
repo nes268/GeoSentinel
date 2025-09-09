@@ -49,11 +49,31 @@ export interface LeaderboardEntry {
 export interface PerformanceStats {
   totalPoints: number;
   activeWorkers: number;
+  totalWorkers: number;
   participationRate: number;
   averageSafetyScore: number;
   totalBadgesEarned: number;
   challengesCompleted: number;
   incidentsReduction: number;
+  // New fields for expanded dashboard
+  pointsTrend: number; // percentage change
+  activeWorkersTrend: number; // percentage change
+  engagementRate: number; // overall engagement percentage
+  safetyScoreTrend: number; // percentage change
+  streakBreakdown: {
+    sevenDays: number;
+    thirtyDays: number;
+    sixtyDays: number;
+  };
+  walletBudget: {
+    total: number;
+    redeemed: number;
+    remaining: number;
+  };
+  topBadges: Array<{
+    badge: Badge;
+    earnedCount: number;
+  }>;
 }
 
 class PerformanceService {
@@ -364,26 +384,69 @@ class PerformanceService {
 
   // Get performance statistics
   getPerformanceStats(): PerformanceStats {
-    const totalPoints = this.workers.reduce((sum, worker) => sum + worker.points, 0);
-    const activeWorkers = this.workers.filter(w => 
-      (new Date().getTime() - w.lastActivity.getTime()) < 7 * 24 * 60 * 60 * 1000
-    ).length;
-    const participationRate = (activeWorkers / this.workers.length) * 100;
-    const averageSafetyScore = this.workers.reduce((sum, worker) => sum + worker.safetyScore, 0) / this.workers.length;
+    const totalPoints = 79400; // Using provided data
+    const activeWorkers = 182; // Using provided data
+    const totalWorkers = 200; // Using provided data
+    const participationRate = (activeWorkers / totalWorkers) * 100;
+    const averageSafetyScore = 97.3; // Using provided data
     const totalBadgesEarned = this.workers.reduce((sum, worker) => sum + worker.badges.length, 0);
     const challengesCompleted = this.challenges.filter(c => c.completed).length;
     
     // Calculate incidents reduction (mock data)
     const incidentsReduction = 15.3; // This would be calculated from historical data
 
+    // Calculate trends (using provided data)
+    const pointsTrend = 12; // +12% from last week
+    const activeWorkersTrend = 5; // +5% from last week  
+    const engagementRate = 91; // 91% engagement
+    const safetyScoreTrend = -2.7; // -2.7% (decrease)
+
+    // Calculate streak breakdown
+    const streakBreakdown = {
+      sevenDays: 12, // 12 workers on 7+ day streaks
+      thirtyDays: 8, // 8 workers on 30+ day streaks
+      sixtyDays: 5   // 5 workers on 60+ day streaks
+    };
+
+    // Calculate wallet budget (mock data)
+    const walletBudget = {
+      total: 20000,
+      redeemed: 7550,
+      remaining: 12450
+    };
+
+    // Calculate top badges (using provided data)
+    const topBadges = [
+      {
+        badge: this.badges.find(b => b.id === 'safety-first') || { id: 'safety-first', name: 'Safe Hero', icon: '🛡️' },
+        earnedCount: 48
+      },
+      {
+        badge: this.badges.find(b => b.id === 'quick-responder') || { id: 'quick-responder', name: 'Fast Responder', icon: '⚡' },
+        earnedCount: 33
+      },
+      {
+        badge: this.badges.find(b => b.id === 'perfect-week') || { id: 'perfect-week', name: 'Unstoppable', icon: '⭐' },
+        earnedCount: 20
+      }
+    ];
+
     return {
       totalPoints,
       activeWorkers,
+      totalWorkers,
       participationRate,
       averageSafetyScore,
       totalBadgesEarned,
       challengesCompleted,
-      incidentsReduction
+      incidentsReduction,
+      pointsTrend,
+      activeWorkersTrend,
+      engagementRate,
+      safetyScoreTrend,
+      streakBreakdown,
+      walletBudget,
+      topBadges
     };
   }
 
